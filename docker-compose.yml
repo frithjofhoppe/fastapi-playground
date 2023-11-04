@@ -1,0 +1,6 @@
+services:
+  test-app:
+    image: fastapi-demo
+    ports:
+      - "3100:3100"
+    
