@@ -25,13 +25,11 @@ jobs:
         registry: https://ghcr.io/
         username: ${{ secrets.AzureAppService_ContainerUsername_a2f0ea751c204edd9b09eede76faecee }}
         password: ${{ secrets.AzureAppService_ContainerPassword_0a146eec57a3479b816b8c9804425007 }}
-
-    - name: Build and push container image to registry
-      uses: docker/build-push-action@v3
+    - name: Build and publish a Docker image for ${{ github.repository }}
+      uses: macbre/push-to-ghcr@master
       with:
-        push: true
-        tags: ghcr.io/${{ secrets.AzureAppService_ContainerUsername_a2f0ea751c204edd9b09eede76faecee }}/frithjofhoppe/fastapi-playground:${{ github.sha }}
-        file: ./Dockerfile
+        image_name: frithjofhoppe/fastapi-playground:${{ github.sha }}  # it will be lowercased internally
+        github_token: ${{ secrets.GITHUB_TOKEN }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -48,4 +46,4 @@ jobs:
         app-name: 'fastapi-playground'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_43208aad7f5942f5bd9b76b578cf1f83 }}
-        images: 'ghcr.io/${{ secrets.AzureAppService_ContainerUsername_a2f0ea751c204edd9b09eede76faecee }}/frithjofhoppe/fastapi-playground:${{ github.sha }}'
+        images: 'ghcr.io/frithjofhoppe/fastapi-playground:${{ github.sha }}'
