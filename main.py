@@ -1,26 +1,18 @@
-from typing import Dict, List
-import uuid
+from typing import List
 import fastapi
-import redis
-import os
-from redis.commands.json.path import Path
-import redis.commands.search.aggregation as aggregations
-import redis.commands.search.reducers as reducers
-from redis.commands.search.field import TextField, NumericField, TagField
-from redis.commands.search.indexDefinition import IndexDefinition, IndexType
-from redis.commands.search.query import NumericFilter, Query
 from models import Film
 
 app = fastapi.FastAPI()
-r = redis.Redis(host=os.getenv("REDIS_HOST"), port=os.getenv("REDIS_PORT"), password=os.getenv("REDIS_PW"),decode_responses=True, ssl=True)
 
 @app.get("/film/{id}")
-def get_films(id: str) -> Film:
-    return Film.model_validate_json(r.json().get(f"film:{id}"))
+def get_film(id: str) -> Film:
+    return Film.get(pk=id)
+
+def get_films() -> any:
+    return Film.all_pks()
 
 @app.post("/film")
 def create_film(film: Film) -> str:
-    id = str(uuid.uuid4())
-    print(f"Store {id}")
-    r.json().set(f"film:{id}", Path.root_path(), film.model_dump())
-    return id
+    filmObject = film.save()
+    print(f"Store {filmObject.pk}")
+    return filmObject.pk

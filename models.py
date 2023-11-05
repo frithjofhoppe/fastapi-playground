@@ -1,6 +1,5 @@
-from pydantic import BaseModel
+from redis_om import HashModel
 
-
-class Film(BaseModel):
+class Film(HashModel):
     name: str
     release_date: str
