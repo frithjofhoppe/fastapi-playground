@@ -22,7 +22,8 @@ jobs:
     - name: Build and publish a Docker image for ${{ github.repository }}
       uses: macbre/push-to-ghcr@master
       with:
-        image_name: frithjofhoppe/fastapi-playground:${{ github.sha }}  # it will be lowercased internally
+        image_name: frithjofhoppe/fastapi-playground  # it will be lowercased internally
+        image_tag: ${{ github.sha }}
         github_token: ${{ secrets.GITHUB_TOKEN }}
 
   deploy:
