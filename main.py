@@ -13,18 +13,6 @@ from models import Film
 
 app = fastapi.FastAPI()
 r = redis.Redis(host=os.getenv("REDIS_HOST"), port=os.getenv("REDIS_PORT"), password=os.getenv("REDIS_PW"),decode_responses=True, ssl=True)
-schema = (
-    TextField("$.name", as_name="name"), 
-    TextField("$.release_date", as_name="release_date")
-)
-rs = r.ft("idx:films")
-rs.create_index(
-    schema,
-    definition=IndexDefinition(
-        prefix=["film:"], index_type=IndexType.JSON
-    )
-)
-
 
 @app.get("/film/{id}")
 def get_films(id: str) -> Film:
